@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TS Government Schemes | తెలంగాణ ప్రభుత్వ పథకాలు</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyABI3kA4S5gT_fBJMNVFuERsorAzkwrrMo",
+            authDomain: "telangana-scheme-updates.firebaseapp.com",
+            projectId: "telangana-scheme-updates",
+            storageBucket: "telangana-scheme-updates.firebasestorage.app",
+            messagingSenderId: "1088100424122",
+            appId: "1:1088100424122:web:898bdb5fb416089baca583",
+            measurementId: "G-3PMSFMWM06"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        window.saveToDB = (data) => set(push(ref(db, 'schemes')), data);
+        window.loadFromDB = (cb) => onValue(ref(db, 'schemes'), (snap) => {
+            const d = snap.val();
+            cb(d ? Object.entries(d).map(([id, v]) => ({...v, fbId: id})) : []);
+        });
+        window.deleteFromDB = (id) => remove(ref(db, 'schemes/' + id));
+    </script>
+
+    <style>
+        body { font-family: 'Roboto', 'Noto Sans Telugu', sans-serif; background-color: #f3f4f6; }
+        .hidden-section { display: none !important; }
+        .visible-section { display: block !important; animation: slideDown 0.4s ease-out; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .slider-image { display: none; }
+        .slider-image.active { display: block; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen">
+
+    <nav class="sticky top-0 z-50 bg-blue-700 shadow-lg text-white">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-white text-blue-700 p-2 rounded-full h-10 w-10 flex items-center justify-center font-bold text-xl">
+                    <i class="fa-solid fa-landmark"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight">TS Schemes</h1>
+                    <p class="text-[10px] text-blue-200">తెలంగాణ ప్రభుత్వ పథకాలు</p>
+                </div>
+            </div>
+            <button onclick="showLogin()" class="bg-white text-blue-800 px-4 py-2 rounded font-bold text-sm shadow">ADMIN</button>
+        </div>
+    </nav>
+
+    <div id="loginSection" class="hidden-section container mx-auto px-4 mt-6">
+        <div class="bg-blue-800 text-white p-6 rounded-xl shadow-2xl max-w-md mx-auto text-center">
+            <h3 class="text-xl font-bold mb-4">Admin Login</h3>
+            <input type="password" id="passInput" placeholder="Password" class="w-full p-3 rounded text-black mb-4 text-center font-bold">
+            <div class="flex gap-2">
+                <button onclick="verifyPass()" class="flex-1 bg-green-500 py-2 rounded font-bold">LOGIN</button>
+                <button onclick="hideLogin()" class="bg-red-500 px-4 py-2 rounded font-bold">X</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminPanel" class="hidden-section container mx-auto px-4 mt-4 mb-8">
+        <div class="bg-white border-t-4 border-green-500 rounded-xl p-6 shadow-xl">
+            <h3 class="font-bold text-xl text-green-700 mb-4 border-b pb-2">Dashboard</h3>
+            <form onsubmit="handlePublish(event)" class="space-y-4">
+                <input type="file" id="imgFiles" multiple accept="image/*" class="w-full text-sm border p-2 rounded">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="sTitle" placeholder="Scheme Title" class="w-full p-3 border rounded-lg" required>
+                    <input type="text" id="sCat" placeholder="Category" class="w-full p-3 border rounded-lg" required>
+                </div>
+                <textarea id="sDetails" rows="3" placeholder="Full Details" class="w-full p-3 border rounded-lg" required></textarea>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <textarea id="sBenefits" rows="2" placeholder="Benefits" class="w-full p-3 border rounded-lg" required></textarea>
+                    <textarea id="sDocs" rows="2" placeholder="Documents" class="w-full p-3 border rounded-lg" required></textarea>
+                </div>
+                <input type="url" id="sLink" placeholder="Official Website Link" class="w-full p-3 border rounded-lg">
+                <button type="submit" id="pubBtn" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg shadow-md">PUBLISH SCHEME</button>
+            </form>
+        </div>
+    </div>
+
+    <main class="container mx-auto mt-4 px-4 flex-grow">
+        
+        <div class="w-full flex justify-center mb-6">
+            <script type="text/javascript">
+                atOptions = { 'key' : '662d624c17b504901208ce8544f70406', 'format' : 'iframe', 'height' : 60, 'width' : 468, 'params' : {} };
+            </script>
+            <script type="text/javascript" src="https://www.highperformanceformat.com/662d624c17b504901208ce8544f70406/invoke.js"></script>
+        </div>
+
+        <div id="schemesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-6">
+            <p class="text-center col-span-full py-10 text-gray-400">Loading Schemes from Database...</p>
+        </div>
+
+        <div class="w-full flex justify-center my-8">
+            <script async="async" data-cfasync="false" src="https://pl28325905.effectivegatecpm.com/bf4605ad5ef44dd961a8728b870393d2/invoke.js"></script>
+            <div id="container-bf4605ad5ef44dd961a8728b870393d2"></div>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-800 text-white py-6 text-center text-xs">
+        <p>&copy; 2024 TS Schemes Portal. Official Updates</p>
+    </footer>
+
+    <script src="https://pl28325896.effectivegatecpm.com/0d/c8/74/0dc874f5dd64527231ea5200d7597202.js"></script>
+
+    <script>
+        let adminMode = false;
+
+        function showLogin() { document.getElementById('loginSection').className = "visible-section container mx-auto px-4 mt-6"; }
+        function hideLogin() { document.getElementById('loginSection').className = "hidden-section"; }
+        
+        function verifyPass() {
+            if(document.getElementById('passInput').value === "admin123") {
+                adminMode = true;
+                hideLogin();
+                document.getElementById('adminPanel').className = "visible-section container mx-auto px-4 mt-4 mb-8";
+                alert("Welcome Admin!");
+            } else { alert("Wrong Password!"); }
+        }
+
+        async function handlePublish(e) {
+            e.preventDefault();
+            const btn = document.getElementById('pubBtn');
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
+            const files = document.getElementById('imgFiles').files;
+            const read = (f) => new Promise(res => {
+                const r = new FileReader();
+                r.onloadend = () => res(r.result);
+                r.readAsDataURL(f);
+            });
+
+            const imgs = await Promise.all(Array.from(files).map(read));
+
+            const scheme = {
+                title: document.getElementById('sTitle').value,
+                category: document.getElementById('sCat').value,
+                details: document.getElementById('sDetails').value,
+                benefits: document.getElementById('sBenefits').value,
+                docs: document.getElementById('sDocs').value,
+                link: document.getElementById('sLink').value,
+                timestamp: Date.now(),
+                images: imgs.length ? imgs : ["https://via.placeholder.com/600x350?text=TS+Scheme"]
+            };
+
+            window.saveToDB(scheme).then(() => {
+                alert("Successfully Published to Public!");
+                e.target.reset();
+                btn.innerText = "PUBLISH SCHEME";
+                btn.disabled = false;
+                document.getElementById('adminPanel').className = "hidden-section";
+            });
+        }
+
+        function render(data) {
+            const grid = document.getElementById('schemesGrid');
+            grid.innerHTML = "";
+            const fifteenDays = 15 * 24 * 60 * 60 * 1000;
+            const valid = data.filter(s => (Date.now() - s.timestamp) < fifteenDays).reverse();
+
+            if(!valid.length) { grid.innerHTML = "<p class='col-span-full text-center py-10'>No Active Schemes.</p>"; return; }
+
+            valid.forEach(s => {
+                let imgH = "", dotH = "", navH = "";
+                s.images.forEach((img, i) => {
+                    imgH += `<img src="${img}" class="slider-image ${i===0?'active':''} w-full h-48 object-cover absolute" id="img-${s.fbId}-${i}">`;
+                    dotH += `<div class="w-2 h-2 rounded-full ${i===0?'bg-blue-600':'bg-white/70'}" id="dot-${s.fbId}-${i}"></div>`;
+                });
+                if(s.images.length > 1) {
+                    navH = `<button onclick="slide('${s.fbId}',-1)" class="absolute left-2 top-20 bg-black/40 text-white w-8 h-8 rounded-full z-10 text-xs"><i class="fa-solid fa-chevron-left"></i></button>
+                            <button onclick="slide('${s.fbId}',1)" class="absolute right-2 top-20 bg-black/40 text-white w-8 h-8 rounded-full z-10 text-xs"><i class="fa-solid fa-chevron-right"></i></button>`;
+                }
+
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-xl shadow-md overflow-hidden flex flex-col border border-gray-100";
+                card.innerHTML = `
+                    <div class="relative h-48 bg-gray-200" id="slider-${s.fbId}" data-idx="0" data-total="${s.images.length}">
+                        ${imgH} ${navH}
+                        <div class="absolute top-2 left-2 z-10"><span class="bg-blue-600/90 text-white text-[10px] px-2 py-1 rounded shadow uppercase font-bold">${s.category}</span></div>
+                        <div class="absolute bottom-2 w-full flex justify-center gap-1 z-10">${dotH}</div>
+                    </div>
+                    <div class="p-5 flex-grow">
+                        <h3 class="font-bold text-lg mb-2 text-slate-800">${s.title}</h3>
+                        <p class="text-sm text-gray-600 mb-4 line-clamp-2">${s.details}</p>
+                        <div class="space-y-2 text-xs">
+                            <div class="bg-green-50 p-2 rounded border border-green-100"><span class="font-bold text-green-700 block">Benefits:</span> ${s.benefits}</div>
+                            <div class="bg-orange-50 p-2 rounded border border-orange-100"><span class="font-bold text-orange-700 block">Docs:</span> ${s.docs}</div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-gray-50 border-t flex gap-2">
+                        <button onclick="window.open('https://wa.me/?text='+encodeURIComponent('*'+s.title+'*\\n'+s.details))" class="flex-1 bg-green-500 text-white py-2 rounded-lg text-sm font-bold shadow-sm">SHARE</button>
+                        ${adminMode ? `<button onclick="delS('${s.fbId}')" class="bg-red-100 text-red-500 px-3 rounded-lg"><i class="fa-solid fa-trash"></i></button>` : ''}
+                    </div>`;
+                grid.appendChild(card);
+            });
+        }
+
+        window.slide = (id, dir) => {
+            const el = document.getElementById(`slider-${id}`);
+            let idx = (parseInt(el.getAttribute('data-idx')) + dir + parseInt(el.getAttribute('data-total'))) % parseInt(el.getAttribute('data-total'));
+            el.querySelectorAll('.slider-image').forEach(i => i.classList.remove('active'));
+            el.querySelectorAll('.w-2').forEach(d => d.classList.replace('bg-blue-600', 'bg-white/70'));
+            document.getElementById(`img-${id}-${idx}`).classList.add('active');
+            document.getElementById(`dot-${id}-${idx}`).classList.replace('bg-white/70', 'bg-blue-600');
+            el.setAttribute('data-idx', idx);
+        };
+
+        window.delS = (id) => { if(confirm("Delete permanently?")) window.deleteFromDB(id); };
+
+        setTimeout(() => window.loadFromDB(render), 1000);
+    </script>
+</body>
+</html>
